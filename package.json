@@ -1,0 +1,12 @@
+{
+    "dependencies": {
+        "chokidar-cli": "^1.2.0",
+        "elm": "^0.18.0",
+        "elm-css": "^0.6.0"
+    },
+    "scripts": {
+        "build": "elm make src/Main.elm --output=sweeper.js",
+        "watch": "chokidar '**/*.elm' -c 'yarn build' --initial",
+        "css": "elm-css src/Stylesheets.elm"
+    }
+}
