@@ -19,6 +19,7 @@ type CssClass
     | Mine
     | Potential
     | Flagged
+    | Wrapper
 
 
 
@@ -30,19 +31,22 @@ type CssClass
 css : Stylesheet
 css =
     (stylesheet << namespace "sweeper")
-        [ class Row
+        [ class Wrapper
+            [ displayFlex
+            , flexDirection column
+            , alignItems center
+            ]
+        , class Row
             [ displayFlex
             ]
         , class Cell
-            [ width (px 16)
-            , height (px 16)
+            [ width (px 28)
+            , height (px 28)
             , border3 (px 1) solid (hex "aaa")
             , borderRadius (px 2)
-            , displayFlex
-            , alignItems center
             , textAlign center
             , fontFamily monospace
-            , fontSize (px 20)
+            , fontSize (px 24)
             , property "user-select" "none"
             ]
         , class Flagged

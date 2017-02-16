@@ -1,8 +1,8 @@
 module Main exposing (..)
 
-import Html exposing (programWithFlags, Html, div, text)
+import Html exposing (programWithFlags, Html, div, text, h1)
 import Html.Lazy
-import Html.Events exposing (onClick)
+import Html.Events exposing (onClick, onDoubleClick)
 import Html.CssHelpers
 import Rocket exposing ((=>))
 import Matrix exposing (Matrix)
@@ -90,6 +90,7 @@ type alias Model =
     , field : Matrix Cell
     , seed : Random.Seed
     , shiftDown : Bool
+    , flagsLeft : Int
     }
 
 
@@ -101,7 +102,7 @@ countNeighbouringMines x y field =
 
 
 ( fieldWidth, fieldHeight ) =
-    ( 30, 20 )
+    ( 20, 20 )
 
 
 randomModel : Int -> Model
@@ -139,6 +140,7 @@ randomModel flags =
         , field = field |> addNeighbourCounts
         , seed = newSeed
         , shiftDown = False
+        , flagsLeft = field |> countFlagsLeft
         }
 
 
@@ -151,6 +153,33 @@ init flags =
     randomModel flags => []
 
 
+countFlagsLeft : Matrix Cell -> Int
+countFlagsLeft cellMatrix =
+    let
+        ( flags, bombs ) =
+            cellMatrix.data
+                |> Array.foldl
+                    (\cell ( flags, bombs ) ->
+                        let
+                            nFlags =
+                                if isFlag cell then
+                                    flags + 1
+                                else
+                                    flags
+
+                            nBombs =
+                                if isMine cell then
+                                    bombs + 1
+                                else
+                                    bombs
+                        in
+                            ( nFlags, nBombs )
+                    )
+                    ( 0, 0 )
+    in
+        bombs - flags
+
+
 
 -- update
 
@@ -160,6 +189,7 @@ type Msg
     | NoOp
     | PressShift
     | ReleaseShift
+    | DoubleClickCell Int Int Cell
 
 
 update : Msg -> Model -> ( Model, List (Cmd Msg) )
@@ -190,8 +220,69 @@ update action model =
             }
                 => []
 
+        DoubleClickCell x y cell ->
+            case model.phase of
+                Playing ->
+                    -- handle that
+                    model
+                        |> floodFromCell x y cell
+                        => []
+
+                _ ->
+                    model => []
+
         NoOp ->
             model => []
+
+
+countNeighbouringFlags : Int -> Int -> Matrix Cell -> Int
+countNeighbouringFlags x y field =
+    Matrix.Extra.neighbours x y field
+        |> List.filter isFlag
+        |> List.length
+
+
+hasWronglyFlaggedNeighbours : Int -> Int -> Matrix Cell -> Bool
+hasWronglyFlaggedNeighbours x y field =
+    Matrix.Extra.neighbours x y field
+        |> List.any (\cell -> xor (isFlag cell) (isMine cell))
+
+
+floodFromCell : Int -> Int -> Cell -> Model -> Model
+floodFromCell x y cell model =
+    if
+        (cell.neighbours == 0)
+            || (cell.neighbours /= countNeighbouringFlags x y model.field)
+    then
+        model
+    else if hasWronglyFlaggedNeighbours x y model.field then
+        { model
+            | field = model.field |> revealMines
+            , phase = GameOver
+        }
+    else
+        let
+            fieldsToDiscover : List ( Int, Int )
+            fieldsToDiscover =
+                Matrix.Extra.indexedNeighbours x y model.field
+                    |> List.filter
+                        (\( ( x, y ), cell ) ->
+                            isPotential cell
+                        )
+                    |> List.map Tuple.first
+
+            updatedField : Matrix Cell
+            updatedField =
+                fieldsToDiscover
+                    |> List.foldl
+                        (\( x, y ) field ->
+                            discover x y field
+                        )
+                        model.field
+        in
+            { model
+                | field = updatedField
+            }
 
 
 showCell : Cell -> Cell
@@ -203,12 +294,12 @@ showCell cell =
 
 isPotential : Cell -> Bool
 isPotential cell =
-    case cell.state of
-        Potential ->
-            True
+    cell.state == Potential
 
-        _ ->
-            False
+
+isFlag : Cell -> Bool
+isFlag cell =
+    cell.state == Flagged
 
 
 isMine : Cell -> Bool
@@ -232,9 +323,14 @@ toggleFlagState cell =
 
 toggleFlag : Int -> Int -> Model -> Model
 toggleFlag x y model =
-    { model
-        | field = Matrix.update x y toggleFlagState model.field
-    }
+    let
+        newField =
+            Matrix.update x y toggleFlagState model.field
+    in
+        { model
+            | field = newField
+            , flagsLeft = countFlagsLeft newField
+        }
 
 
 revealMines : Matrix Cell -> Matrix Cell
@@ -308,7 +404,10 @@ discover x y field =
 
 view : Model -> Html Msg
 view model =
-    div [] [ renderField model.field ]
+    div [ class [ Styles.Wrapper ] ]
+        [ h1 [] [ text <| toString model.flagsLeft ]
+        , renderField model.field
+        ]
 
 
 renderField : Matrix Cell -> Html Msg
@@ -363,7 +462,10 @@ renderNumbered cell x y =
                 n ->
                     toString n
     in
-        div [ class [ Styles.Cell, Styles.Discovered ] ]
+        div
+            [ class [ Styles.Cell, Styles.Discovered ]
+            , onDoubleClick <| DoubleClickCell x y cell
+            ]
             [ text number ]
 
 
