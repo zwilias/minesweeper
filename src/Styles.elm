@@ -18,6 +18,7 @@ type CssClass
     | Discovered
     | Mine
     | Potential
+    | Flagged
 
 
 
@@ -33,15 +34,24 @@ css =
             [ displayFlex
             ]
         , class Cell
-            [ width (px 12)
-            , height (px 12)
+            [ width (px 16)
+            , height (px 16)
             , border3 (px 1) solid (hex "aaa")
             , borderRadius (px 2)
             , displayFlex
             , alignItems center
             , textAlign center
             , fontFamily monospace
-            , fontSize (px 15)
+            , fontSize (px 20)
+            , property "user-select" "none"
+            ]
+        , class Flagged
+            [ hover
+                [ backgroundColor (hex "00A")
+                ]
+            , backgroundColor (hex "00A")
+            , borderColor (hex "333")
+            , color (hex "F00")
             ]
         , class Potential
             [ hover

@@ -1,6 +1,7 @@
 module Main exposing (..)
 
 import Html exposing (programWithFlags, Html, div, text)
+import Html.Lazy
 import Html.Events exposing (onClick)
 import Html.CssHelpers
 import Rocket exposing ((=>))
@@ -9,6 +10,7 @@ import Matrix.Extra
 import Random.Pcg as Random
 import Array exposing (Array)
 import Styles
+import Keyboard
 
 
 -- app
@@ -28,25 +30,53 @@ main =
 -- subscriptions
 
 
+shiftKey : Keyboard.KeyCode
+shiftKey =
+    16
+
+
 subscriptions : Model -> Sub Msg
 subscriptions model =
-    Sub.none
+    Sub.batch
+        [ Keyboard.downs
+            (\x ->
+                if x == shiftKey then
+                    PressShift
+                else
+                    NoOp
+            )
+        , Keyboard.ups
+            (\x ->
+                if x == shiftKey then
+                    ReleaseShift
+                else
+                    NoOp
+            )
+        ]
 
 
 
 -- model
 
 
+type CellState
+    = Potential
+    | Flagged
+    | Discovered
+
+
 type alias Cell =
-    { discovered : Bool
+    { state : CellState
     , mine : Bool
+    , neighbours : Int
     }
 
 
 initCell : Bool -> Cell
 initCell mine =
-    { discovered = False
+    { state = Potential
     , mine = mine
+    , neighbours = 0
     }
 
 
@@ -59,18 +89,19 @@ type alias Model =
     { phase : GamePhase
     , field : Matrix Cell
     , seed : Random.Seed
+    , shiftDown : Bool
     }
 
 
-neighbouringMines : Int -> Int -> Matrix Cell -> Int
-neighbouringMines x y field =
+countNeighbouringMines : Int -> Int -> Matrix Cell -> Int
+countNeighbouringMines x y field =
     Matrix.Extra.neighbours x y field
         |> List.filter isMine
         |> List.length
 
 
 ( fieldWidth, fieldHeight ) =
-    ( 50, 40 )
+    ( 30, 20 )
 
 
 randomModel : Int -> Model
@@ -93,10 +124,21 @@ randomModel flags =
                 |> List.map initCell
                 |> Array.fromList
                 |> Matrix ( fieldWidth, fieldHeight )
+
+        addNeighbourCounts : Matrix Cell -> Matrix Cell
+        addNeighbourCounts field =
+            Matrix.indexedMap
+                (\x y cell ->
+                    { cell
+                        | neighbours = countNeighbouringMines x y field
+                    }
+                )
+                field
     in
         { phase = Playing
-        , field = field
+        , field = field |> addNeighbourCounts
         , seed = newSeed
+        , shiftDown = False
         }
 
 
@@ -115,31 +157,95 @@ init flags =
 
 type Msg
     = ClickCell Int Int
+    | NoOp
+    | PressShift
+    | ReleaseShift
 
 
 update : Msg -> Model -> ( Model, List (Cmd Msg) )
 update action model =
     case action of
         ClickCell x y ->
-            handleClick x y model
+            case model.phase of
+                Playing ->
+                    if model.shiftDown then
+                        toggleFlag x y model
+                            => []
+                    else
+                        handleClick x y model
+                            => []
+
+                _ ->
+                    model => []
+
+        PressShift ->
+            { model
+                | shiftDown = True
+            }
                 => []
+
+        ReleaseShift ->
+            { model
+                | shiftDown = False
+            }
+                => []
+
+        NoOp ->
+            model => []
 
 
 showCell : Cell -> Cell
 showCell cell =
     { cell
-        | discovered = True
+        | state = Discovered
     }
 
 
-isDiscovered : Cell -> Bool
-isDiscovered cell =
-    cell.discovered
+isPotential : Cell -> Bool
+isPotential cell =
+    case cell.state of
+        Potential ->
+            True
+
+        _ ->
+            False
 
 
 isMine : Cell -> Bool
 isMine cell =
     cell.mine
+
+
+toggleFlagState : Cell -> Cell
+toggleFlagState cell =
+    let
+        newState =
+            if isPotential cell then
+                Flagged
+            else
+                Potential
+    in
+        { cell
+            | state = newState
+        }
+
+
+toggleFlag : Int -> Int -> Model -> Model
+toggleFlag x y model =
+    { model
+        | field = Matrix.update x y toggleFlagState model.field
+    }
+
+
+revealMines : Matrix Cell -> Matrix Cell
+revealMines =
+    Matrix.map
+        (\cell ->
+            if isMine cell then
+                showCell cell
+            else
+                cell
+        )
 
 
 handleClick : Int -> Int -> Model -> Model
@@ -151,7 +257,7 @@ handleClick x y model =
         Just aCell ->
             if aCell.mine then
                 { model
-                    | field = Matrix.update x y showCell model.field
+                    | field = model.field |> revealMines
                     , phase = GameOver
                 }
             else
@@ -170,10 +276,7 @@ discover x y field =
                     []
 
                 Just cell ->
-                    if
-                        neighbouringMines x y field
-                            > 0
-                    then
+                    if cell.neighbours > 0 then
                         []
                     else
                         Matrix.Extra.indexedNeighbours x y field
@@ -185,8 +288,8 @@ discover x y field =
             |> neighbours
             |> List.filter
                 (\( ( cX, cY ), cell ) ->
-                    not cell.discovered
-                        && not cell.mine
+                    isPotential cell
+                        && (not <| isMine cell)
                 )
             |> List.foldl
                 (\( ( cX, cY ), cell ) field ->
@@ -215,28 +318,31 @@ renderField field =
             (\idx ->
                 Matrix.getRow idx field
                     |> Maybe.withDefault Array.empty
-                    |> renderRow field idx
+                    |> Html.Lazy.lazy2 renderRow idx
             )
         |> div []
 
 
-renderRow : Matrix Cell -> Int -> Array Cell -> Html Msg
-renderRow field row data =
+renderRow : Int -> Array Cell -> Html Msg
+renderRow row data =
     Array.toList data
-        |> List.indexedMap (renderCell field row)
+        |> List.indexedMap (Html.Lazy.lazy3 renderCell row)
         |> div [ class [ Styles.Row ] ]
 
 
-renderCell : Matrix Cell -> Int -> Int -> Cell -> Html Msg
-renderCell field y x cell =
-    case ( cell.discovered, cell.mine ) of
-        ( True, True ) ->
+renderCell : Int -> Int -> Cell -> Html Msg
+renderCell y x cell =
+    case ( cell.state, cell.mine ) of
+        ( Discovered, True ) ->
             renderMine
 
-        ( True, False ) ->
-            renderNumbered field x y
+        ( Discovered, False ) ->
+            renderNumbered cell x y
 
-        ( False, _ ) ->
+        ( Flagged, _ ) ->
+            renderFlagged x y
+
+        ( Potential, _ ) ->
             renderPotential x y
 
 
@@ -245,12 +351,12 @@ renderMine =
     div [ class [ Styles.Cell, Styles.Mine ] ] []
 
 
-renderNumbered : Matrix Cell -> Int -> Int -> Html Msg
-renderNumbered field x y =
+renderNumbered : Cell -> Int -> Int -> Html Msg
+renderNumbered cell x y =
     let
         number : String
         number =
-            case neighbouringMines x y field of
+            case cell.neighbours of
                 0 ->
                     ""
 
@@ -259,6 +365,18 @@ renderNumbered field x y =
     in
         div [ class [ Styles.Cell, Styles.Discovered ] ]
             [ text number ]
+
+
+renderFlagged : Int -> Int -> Html Msg
+renderFlagged x y =
+    div
+        [ class
+            [ Styles.Cell
+            , Styles.Flagged
+            ]
+        , onClick (ClickCell x y)
+        ]
+        [ text "F" ]
 
 
 renderPotential : Int -> Int -> Html Msg
