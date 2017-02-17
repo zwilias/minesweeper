@@ -1,0 +1,43 @@
+.sweeperWrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.sweeperRow {
+    display: flex;
+}
+
+.sweeperCell {
+    width: 28px;
+    height: 28px;
+    border: 1px solid #aaa;
+    border-radius: 2px;
+    text-align: center;
+    font-family: monospace;
+    font-size: 24px;
+    user-select: none;
+}
+
+.sweeperFlagged {
+    background-color: #00A;
+    border-color: #333;
+    color: #F00;
+}
+
+.sweeperFlagged:hover {
+    background-color: #00A;
+}
+
+.sweeperPotential {
+    background-color: #ddd;
+    border-color: #333;
+}
+
+.sweeperPotential:hover {
+    background-color: #ccc;
+}
+
+.sweeperMine {
+    background-color: #F00;
+}
