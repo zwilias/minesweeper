@@ -5,7 +5,7 @@
         "elm-css": "^0.6.0"
     },
     "scripts": {
-        "build": "elm make src/Main.elm --output=sweeper.js",
+        "build": "elm make src/Main.elm --output=sweeper.js && yarn css",
         "watch": "chokidar '**/*.elm' -c 'yarn build' --initial",
         "css": "elm-css src/Stylesheets.elm"
     }

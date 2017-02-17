@@ -1,0 +1,14 @@
+language: node_js
+node_js:
+- stable
+
+cache:
+  yarn: true
+  directories:
+    - node_modules
+
+script: bash ./deploy.sh
+env:
+  global:
+  - ENCRYPTION_LABEL: "a319e47c3425"
+  - COMMIT_AUTHOR_EMAIL: "mail@ilias.xyz"
