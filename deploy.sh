@@ -1,4 +1,5 @@
-#!/bin/bash -x
+#!/bin/bash
+set -x # More info
 set -e # Exit with nonzero exit code if anything fails
 
 SOURCE_BRANCH="master"
@@ -30,13 +31,19 @@ cd ..
 # Clean out existing contents
 rm -rf out/**/* || exit 0
 
+ls -l
+
 # Run our compile script
 doCompile
+
+ls -l
 
 # Now let's go have some fun with the cloned repo
 cd out
 git config user.name "Travis CI"
 git config user.email "$COMMIT_AUTHOR_EMAIL"
+
+ls -l
 
 # If there are no changes to the compiled out (e.g. this is a README update) then just bail.
 if [ -z `git diff --exit-code > /dev/null` ]; then
