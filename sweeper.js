@@ -17245,14 +17245,14 @@ var _user$project$Main$countNeighbouringMines = F3(
 				A3(_eeue56$elm_flat_matrix$Matrix_Extra$neighbours, x, y, field)));
 	});
 var _user$project$Main$popState = function (model) {
-	var _p2 = model.previousStates;
-	if (_p2.ctor === '[]') {
+	var _p2 = model.previous;
+	if (_p2.ctor === 'Nothing') {
 		return model;
 	} else {
 		var _p3 = _p2._0;
 		return _elm_lang$core$Native_Utils.update(
 			model,
-			{field: _p3.field, flagsLeft: _p3.flagsLeft, phase: _p3.phase, previousStates: _p2._1});
+			{field: _p3.field, flagsLeft: _p3.flagsLeft, phase: _p3.phase, previous: _elm_lang$core$Maybe$Nothing});
 	}
 };
 var _user$project$Main$pushState = function (model) {
@@ -17260,7 +17260,7 @@ var _user$project$Main$pushState = function (model) {
 	return _elm_lang$core$Native_Utils.update(
 		model,
 		{
-			previousStates: {ctor: '::', _0: prev, _1: model.previousStates}
+			previous: _elm_lang$core$Maybe$Just(prev)
 		});
 };
 var _user$project$Main$backspace = 8;
@@ -17275,7 +17275,7 @@ var _user$project$Main$PrevState = F3(
 	});
 var _user$project$Main$Model = F6(
 	function (a, b, c, d, e, f) {
-		return {phase: a, field: b, seed: c, shiftDown: d, flagsLeft: e, previousStates: f};
+		return {phase: a, field: b, seed: c, shiftDown: d, flagsLeft: e, previous: f};
 	});
 var _user$project$Main$Discovered = {ctor: 'Discovered'};
 var _user$project$Main$showCell = function (cell) {
@@ -17549,7 +17549,7 @@ var _user$project$Main$randomModel = function (flags) {
 		seed: newSeed,
 		shiftDown: false,
 		flagsLeft: _user$project$Main$countFlagsLeft(field),
-		previousStates: {ctor: '[]'}
+		previous: _elm_lang$core$Maybe$Nothing
 	};
 };
 var _user$project$Main$init = function (flags) {
