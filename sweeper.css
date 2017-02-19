@@ -9,13 +9,13 @@
 }
 
 .sweeperCell {
-    width: 28px;
-    height: 28px;
+    width: 14px;
+    height: 14px;
     border: 1px solid #aaa;
     border-radius: 2px;
     text-align: center;
     font-family: monospace;
-    font-size: 24px;
+    font-size: 12px;
     user-select: none;
 }
 

@@ -17094,11 +17094,11 @@ var _user$project$Styles$css = function (_p0) {
 					{
 						ctor: '::',
 						_0: _rtfeldman$elm_css$Css$width(
-							_rtfeldman$elm_css$Css$px(28)),
+							_rtfeldman$elm_css$Css$px(14)),
 						_1: {
 							ctor: '::',
 							_0: _rtfeldman$elm_css$Css$height(
-								_rtfeldman$elm_css$Css$px(28)),
+								_rtfeldman$elm_css$Css$px(14)),
 							_1: {
 								ctor: '::',
 								_0: A3(
@@ -17119,7 +17119,7 @@ var _user$project$Styles$css = function (_p0) {
 											_1: {
 												ctor: '::',
 												_0: _rtfeldman$elm_css$Css$fontSize(
-													_rtfeldman$elm_css$Css$px(24)),
+													_rtfeldman$elm_css$Css$px(12)),
 												_1: {
 													ctor: '::',
 													_0: A2(_rtfeldman$elm_css$Css$property, 'user-select', 'none'),
@@ -17232,9 +17232,10 @@ var _user$project$Main$renderMine = A2(
 var _user$project$Main$isMine = function (cell) {
 	return cell.mine;
 };
-var _user$project$Main$_p1 = {ctor: '_Tuple2', _0: 20, _1: 20};
+var _user$project$Main$_p1 = {ctor: '_Tuple3', _0: 60, _1: 40, _2: 9};
 var _user$project$Main$fieldWidth = _user$project$Main$_p1._0;
 var _user$project$Main$fieldHeight = _user$project$Main$_p1._1;
+var _user$project$Main$chance = _user$project$Main$_p1._2;
 var _user$project$Main$countNeighbouringMines = F3(
 	function (x, y, field) {
 		return _elm_lang$core$List$length(
@@ -17486,23 +17487,20 @@ var _user$project$Main$randomModel = function (flags) {
 			field);
 	};
 	var seed = _mgold$elm_random_pcg$Random_Pcg$initialSeed(flags);
-	var randomBools = function (chance) {
-		return A2(
-			_mgold$elm_random_pcg$Random_Pcg$step,
-			A2(
-				_mgold$elm_random_pcg$Random_Pcg$list,
-				_user$project$Main$fieldWidth * _user$project$Main$fieldHeight,
-				_mgold$elm_random_pcg$Random_Pcg$oneIn(chance)),
-			seed);
-	};
-	var _p23 = randomBools(9);
-	var bools = _p23._0;
+	var _p23 = A2(
+		_mgold$elm_random_pcg$Random_Pcg$step,
+		A2(
+			_mgold$elm_random_pcg$Random_Pcg$list,
+			_user$project$Main$fieldWidth * _user$project$Main$fieldHeight,
+			_mgold$elm_random_pcg$Random_Pcg$oneIn(_user$project$Main$chance)),
+		seed);
+	var randomBools = _p23._0;
 	var newSeed = _p23._1;
 	var field = A2(
 		_eeue56$elm_flat_matrix$Matrix$Matrix,
 		{ctor: '_Tuple2', _0: _user$project$Main$fieldWidth, _1: _user$project$Main$fieldHeight},
 		_elm_lang$core$Array$fromList(
-			A2(_elm_lang$core$List$map, _user$project$Main$initCell, bools)));
+			A2(_elm_lang$core$List$map, _user$project$Main$initCell, randomBools)));
 	return {
 		phase: _user$project$Main$Playing,
 		field: addNeighbourCounts(field),
@@ -17708,18 +17706,18 @@ var _user$project$Main$view = function (model) {
 		},
 		{
 			ctor: '::',
-			_0: A2(
-				_elm_lang$html$Html$h1,
-				{ctor: '[]'},
-				{
-					ctor: '::',
-					_0: _elm_lang$html$Html$text(
-						_elm_lang$core$Basics$toString(model.flagsLeft)),
-					_1: {ctor: '[]'}
-				}),
+			_0: _user$project$Main$renderField(model.field),
 			_1: {
 				ctor: '::',
-				_0: _user$project$Main$renderField(model.field),
+				_0: A2(
+					_elm_lang$html$Html$h1,
+					{ctor: '[]'},
+					{
+						ctor: '::',
+						_0: _elm_lang$html$Html$text(
+							_elm_lang$core$Basics$toString(model.flagsLeft)),
+						_1: {ctor: '[]'}
+					}),
 				_1: {ctor: '[]'}
 			}
 		});
