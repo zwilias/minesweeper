@@ -40,13 +40,13 @@ css =
             [ displayFlex
             ]
         , class Cell
-            [ width (px 28)
-            , height (px 28)
+            [ width (px 14)
+            , height (px 14)
             , border3 (px 1) solid (hex "aaa")
             , borderRadius (px 2)
             , textAlign center
             , fontFamily monospace
-            , fontSize (px 24)
+            , fontSize (px 12)
             , property "user-select" "none"
             ]
         , class Flagged

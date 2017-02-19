@@ -101,8 +101,8 @@ countNeighbouringMines x y field =
         |> List.length
 
 
-( fieldWidth, fieldHeight ) =
-    ( 20, 20 )
+( fieldWidth, fieldHeight, chance ) =
+    ( 60, 40, 9 )
 
 
 randomModel : Int -> Model
@@ -112,16 +112,12 @@ randomModel flags =
         seed =
             Random.initialSeed flags
 
-        randomBools : Int -> ( List Bool, Random.Seed )
-        randomBools chance =
+        ( randomBools, newSeed ) =
             Random.step (Random.list (fieldWidth * fieldHeight) <| Random.oneIn chance) seed
-
-        ( bools, newSeed ) =
-            randomBools 9
 
         field : Matrix Cell
         field =
-            bools
+            randomBools
                 |> List.map initCell
                 |> Array.fromList
                 |> Matrix ( fieldWidth, fieldHeight )
@@ -405,8 +401,8 @@ discover x y field =
 view : Model -> Html Msg
 view model =
     div [ class [ Styles.Wrapper ] ]
-        [ h1 [] [ text <| toString model.flagsLeft ]
-        , renderField model.field
+        [ renderField model.field
+        , h1 [] [ text <| toString model.flagsLeft ]
         ]
 
 
