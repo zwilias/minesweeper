@@ -1,3 +1,9 @@
+.sweeperHeader {
+    display: flex;
+    width: 300px;
+    justify-content: space-between;
+}
+
 .sweeperWrapper {
     display: flex;
     flex-direction: column;

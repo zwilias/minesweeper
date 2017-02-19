@@ -17047,6 +17047,7 @@ var _rtfeldman$elm_css_helpers$Html_CssHelpers$Namespace = F4(
 		return {$class: a, classList: b, id: c, name: d};
 	});
 
+var _user$project$Styles$Header = {ctor: 'Header'};
 var _user$project$Styles$Wrapper = {ctor: 'Wrapper'};
 var _user$project$Styles$Flagged = {ctor: 'Flagged'};
 var _user$project$Styles$Potential = {ctor: 'Potential'};
@@ -17062,16 +17063,17 @@ var _user$project$Styles$css = function (_p0) {
 		ctor: '::',
 		_0: A2(
 			_rtfeldman$elm_css$Css$class,
-			_user$project$Styles$Wrapper,
+			_user$project$Styles$Header,
 			{
 				ctor: '::',
 				_0: _rtfeldman$elm_css$Css$displayFlex,
 				_1: {
 					ctor: '::',
-					_0: _rtfeldman$elm_css$Css$flexDirection(_rtfeldman$elm_css$Css$column),
+					_0: _rtfeldman$elm_css$Css$width(
+						_rtfeldman$elm_css$Css$px(300)),
 					_1: {
 						ctor: '::',
-						_0: _rtfeldman$elm_css$Css$alignItems(_rtfeldman$elm_css$Css$center),
+						_0: _rtfeldman$elm_css$Css$justifyContent(_rtfeldman$elm_css$Css$spaceBetween),
 						_1: {ctor: '[]'}
 					}
 				}
@@ -17080,85 +17082,72 @@ var _user$project$Styles$css = function (_p0) {
 			ctor: '::',
 			_0: A2(
 				_rtfeldman$elm_css$Css$class,
-				_user$project$Styles$Row,
+				_user$project$Styles$Wrapper,
 				{
 					ctor: '::',
 					_0: _rtfeldman$elm_css$Css$displayFlex,
-					_1: {ctor: '[]'}
+					_1: {
+						ctor: '::',
+						_0: _rtfeldman$elm_css$Css$flexDirection(_rtfeldman$elm_css$Css$column),
+						_1: {
+							ctor: '::',
+							_0: _rtfeldman$elm_css$Css$alignItems(_rtfeldman$elm_css$Css$center),
+							_1: {ctor: '[]'}
+						}
+					}
 				}),
 			_1: {
 				ctor: '::',
 				_0: A2(
 					_rtfeldman$elm_css$Css$class,
-					_user$project$Styles$Cell,
+					_user$project$Styles$Row,
 					{
 						ctor: '::',
-						_0: _rtfeldman$elm_css$Css$width(
-							_rtfeldman$elm_css$Css$px(14)),
-						_1: {
-							ctor: '::',
-							_0: _rtfeldman$elm_css$Css$height(
-								_rtfeldman$elm_css$Css$px(14)),
-							_1: {
-								ctor: '::',
-								_0: A3(
-									_rtfeldman$elm_css$Css$border3,
-									_rtfeldman$elm_css$Css$px(1),
-									_rtfeldman$elm_css$Css$solid,
-									_rtfeldman$elm_css$Css$hex('aaa')),
-								_1: {
-									ctor: '::',
-									_0: _rtfeldman$elm_css$Css$borderRadius(
-										_rtfeldman$elm_css$Css$px(2)),
-									_1: {
-										ctor: '::',
-										_0: _rtfeldman$elm_css$Css$textAlign(_rtfeldman$elm_css$Css$center),
-										_1: {
-											ctor: '::',
-											_0: _rtfeldman$elm_css$Css$fontFamily(_rtfeldman$elm_css$Css$monospace),
-											_1: {
-												ctor: '::',
-												_0: _rtfeldman$elm_css$Css$fontSize(
-													_rtfeldman$elm_css$Css$px(12)),
-												_1: {
-													ctor: '::',
-													_0: A2(_rtfeldman$elm_css$Css$property, 'user-select', 'none'),
-													_1: {ctor: '[]'}
-												}
-											}
-										}
-									}
-								}
-							}
-						}
+						_0: _rtfeldman$elm_css$Css$displayFlex,
+						_1: {ctor: '[]'}
 					}),
 				_1: {
 					ctor: '::',
 					_0: A2(
 						_rtfeldman$elm_css$Css$class,
-						_user$project$Styles$Flagged,
+						_user$project$Styles$Cell,
 						{
 							ctor: '::',
-							_0: _rtfeldman$elm_css$Css$hover(
-								{
-									ctor: '::',
-									_0: _rtfeldman$elm_css$Css$backgroundColor(
-										_rtfeldman$elm_css$Css$hex('00A')),
-									_1: {ctor: '[]'}
-								}),
+							_0: _rtfeldman$elm_css$Css$width(
+								_rtfeldman$elm_css$Css$px(14)),
 							_1: {
 								ctor: '::',
-								_0: _rtfeldman$elm_css$Css$backgroundColor(
-									_rtfeldman$elm_css$Css$hex('00A')),
+								_0: _rtfeldman$elm_css$Css$height(
+									_rtfeldman$elm_css$Css$px(14)),
 								_1: {
 									ctor: '::',
-									_0: _rtfeldman$elm_css$Css$borderColor(
-										_rtfeldman$elm_css$Css$hex('333')),
+									_0: A3(
+										_rtfeldman$elm_css$Css$border3,
+										_rtfeldman$elm_css$Css$px(1),
+										_rtfeldman$elm_css$Css$solid,
+										_rtfeldman$elm_css$Css$hex('aaa')),
 									_1: {
 										ctor: '::',
-										_0: _rtfeldman$elm_css$Css$color(
-											_rtfeldman$elm_css$Css$hex('F00')),
-										_1: {ctor: '[]'}
+										_0: _rtfeldman$elm_css$Css$borderRadius(
+											_rtfeldman$elm_css$Css$px(2)),
+										_1: {
+											ctor: '::',
+											_0: _rtfeldman$elm_css$Css$textAlign(_rtfeldman$elm_css$Css$center),
+											_1: {
+												ctor: '::',
+												_0: _rtfeldman$elm_css$Css$fontFamily(_rtfeldman$elm_css$Css$monospace),
+												_1: {
+													ctor: '::',
+													_0: _rtfeldman$elm_css$Css$fontSize(
+														_rtfeldman$elm_css$Css$px(12)),
+													_1: {
+														ctor: '::',
+														_0: A2(_rtfeldman$elm_css$Css$property, 'user-select', 'none'),
+														_1: {ctor: '[]'}
+													}
+												}
+											}
+										}
 									}
 								}
 							}
@@ -17167,25 +17156,30 @@ var _user$project$Styles$css = function (_p0) {
 						ctor: '::',
 						_0: A2(
 							_rtfeldman$elm_css$Css$class,
-							_user$project$Styles$Potential,
+							_user$project$Styles$Flagged,
 							{
 								ctor: '::',
 								_0: _rtfeldman$elm_css$Css$hover(
 									{
 										ctor: '::',
 										_0: _rtfeldman$elm_css$Css$backgroundColor(
-											_rtfeldman$elm_css$Css$hex('ccc')),
+											_rtfeldman$elm_css$Css$hex('00A')),
 										_1: {ctor: '[]'}
 									}),
 								_1: {
 									ctor: '::',
 									_0: _rtfeldman$elm_css$Css$backgroundColor(
-										_rtfeldman$elm_css$Css$hex('ddd')),
+										_rtfeldman$elm_css$Css$hex('00A')),
 									_1: {
 										ctor: '::',
 										_0: _rtfeldman$elm_css$Css$borderColor(
 											_rtfeldman$elm_css$Css$hex('333')),
-										_1: {ctor: '[]'}
+										_1: {
+											ctor: '::',
+											_0: _rtfeldman$elm_css$Css$color(
+												_rtfeldman$elm_css$Css$hex('F00')),
+											_1: {ctor: '[]'}
+										}
 									}
 								}
 							}),
@@ -17193,14 +17187,41 @@ var _user$project$Styles$css = function (_p0) {
 							ctor: '::',
 							_0: A2(
 								_rtfeldman$elm_css$Css$class,
-								_user$project$Styles$Mine,
+								_user$project$Styles$Potential,
 								{
 									ctor: '::',
-									_0: _rtfeldman$elm_css$Css$backgroundColor(
-										_rtfeldman$elm_css$Css$hex('F00')),
-									_1: {ctor: '[]'}
+									_0: _rtfeldman$elm_css$Css$hover(
+										{
+											ctor: '::',
+											_0: _rtfeldman$elm_css$Css$backgroundColor(
+												_rtfeldman$elm_css$Css$hex('ccc')),
+											_1: {ctor: '[]'}
+										}),
+									_1: {
+										ctor: '::',
+										_0: _rtfeldman$elm_css$Css$backgroundColor(
+											_rtfeldman$elm_css$Css$hex('ddd')),
+										_1: {
+											ctor: '::',
+											_0: _rtfeldman$elm_css$Css$borderColor(
+												_rtfeldman$elm_css$Css$hex('333')),
+											_1: {ctor: '[]'}
+										}
+									}
 								}),
-							_1: {ctor: '[]'}
+							_1: {
+								ctor: '::',
+								_0: A2(
+									_rtfeldman$elm_css$Css$class,
+									_user$project$Styles$Mine,
+									{
+										ctor: '::',
+										_0: _rtfeldman$elm_css$Css$backgroundColor(
+											_rtfeldman$elm_css$Css$hex('F00')),
+										_1: {ctor: '[]'}
+									}),
+								_1: {ctor: '[]'}
+							}
 						}
 					}
 				}
@@ -17232,7 +17253,7 @@ var _user$project$Main$renderMine = A2(
 var _user$project$Main$isMine = function (cell) {
 	return cell.mine;
 };
-var _user$project$Main$_p1 = {ctor: '_Tuple3', _0: 60, _1: 40, _2: 9};
+var _user$project$Main$_p1 = {ctor: '_Tuple3', _0: 60, _1: 38, _2: 9};
 var _user$project$Main$fieldWidth = _user$project$Main$_p1._0;
 var _user$project$Main$fieldHeight = _user$project$Main$_p1._1;
 var _user$project$Main$chance = _user$project$Main$_p1._2;
@@ -17439,28 +17460,73 @@ var _user$project$Main$handleClick = F3(
 				});
 		}
 	});
+var _user$project$Main$Playing = {ctor: 'Playing'};
+var _user$project$Main$randomModel = function (seed) {
+	var addNeighbourCounts = function (field) {
+		return A2(
+			_eeue56$elm_flat_matrix$Matrix$indexedMap,
+			F3(
+				function (x, y, cell) {
+					return _elm_lang$core$Native_Utils.update(
+						cell,
+						{
+							neighbours: A3(_user$project$Main$countNeighbouringMines, x, y, field)
+						});
+				}),
+			field);
+	};
+	var _p20 = A2(
+		_mgold$elm_random_pcg$Random_Pcg$step,
+		A2(
+			_mgold$elm_random_pcg$Random_Pcg$list,
+			_user$project$Main$fieldWidth * _user$project$Main$fieldHeight,
+			_mgold$elm_random_pcg$Random_Pcg$oneIn(_user$project$Main$chance)),
+		seed);
+	var randomBools = _p20._0;
+	var newSeed = _p20._1;
+	var field = A2(
+		_eeue56$elm_flat_matrix$Matrix$Matrix,
+		{ctor: '_Tuple2', _0: _user$project$Main$fieldWidth, _1: _user$project$Main$fieldHeight},
+		_elm_lang$core$Array$fromList(
+			A2(_elm_lang$core$List$map, _user$project$Main$initCell, randomBools)));
+	return {
+		phase: _user$project$Main$Playing,
+		field: addNeighbourCounts(field),
+		seed: newSeed,
+		shiftDown: false,
+		flagsLeft: _user$project$Main$countFlagsLeft(field),
+		previous: _elm_lang$core$Maybe$Nothing
+	};
+};
+var _user$project$Main$init = function (flags) {
+	return A2(
+		_NoRedInk$rocket_update$Rocket_ops['=>'],
+		_user$project$Main$randomModel(
+			_mgold$elm_random_pcg$Random_Pcg$initialSeed(flags)),
+		{ctor: '[]'});
+};
 var _user$project$Main$update = F2(
 	function (action, model) {
-		var _p20 = action;
-		switch (_p20.ctor) {
+		var _p21 = action;
+		switch (_p21.ctor) {
 			case 'ClickCell':
-				var _p23 = _p20._1;
-				var _p22 = _p20._0;
-				var _p21 = model.phase;
-				if (_p21.ctor === 'Playing') {
+				var _p24 = _p21._1;
+				var _p23 = _p21._0;
+				var _p22 = model.phase;
+				if (_p22.ctor === 'Playing') {
 					return model.shiftDown ? A2(
 						_NoRedInk$rocket_update$Rocket_ops['=>'],
 						A3(
 							_user$project$Main$toggleFlag,
-							_p22,
 							_p23,
+							_p24,
 							_user$project$Main$pushState(model)),
 						{ctor: '[]'}) : A2(
 						_NoRedInk$rocket_update$Rocket_ops['=>'],
 						A3(
 							_user$project$Main$handleClick,
-							_p22,
 							_p23,
+							_p24,
 							_user$project$Main$pushState(model)),
 						{ctor: '[]'});
 				} else {
@@ -17484,15 +17550,15 @@ var _user$project$Main$update = F2(
 						{shiftDown: false}),
 					{ctor: '[]'});
 			case 'DoubleClickCell':
-				var _p24 = model.phase;
-				if (_p24.ctor === 'Playing') {
+				var _p25 = model.phase;
+				if (_p25.ctor === 'Playing') {
 					return A2(
 						_NoRedInk$rocket_update$Rocket_ops['=>'],
 						A4(
 							_user$project$Main$floodFromCell,
-							_p20._0,
-							_p20._1,
-							_p20._2,
+							_p21._0,
+							_p21._1,
+							_p21._2,
 							_user$project$Main$pushState(model)),
 						{ctor: '[]'});
 				} else {
@@ -17506,58 +17572,19 @@ var _user$project$Main$update = F2(
 					_NoRedInk$rocket_update$Rocket_ops['=>'],
 					_user$project$Main$popState(model),
 					{ctor: '[]'});
-			default:
+			case 'NoOp':
 				return A2(
 					_NoRedInk$rocket_update$Rocket_ops['=>'],
 					model,
 					{ctor: '[]'});
+			default:
+				return A2(
+					_NoRedInk$rocket_update$Rocket_ops['=>'],
+					_user$project$Main$randomModel(model.seed),
+					{ctor: '[]'});
 		}
 	});
-var _user$project$Main$Playing = {ctor: 'Playing'};
-var _user$project$Main$randomModel = function (flags) {
-	var addNeighbourCounts = function (field) {
-		return A2(
-			_eeue56$elm_flat_matrix$Matrix$indexedMap,
-			F3(
-				function (x, y, cell) {
-					return _elm_lang$core$Native_Utils.update(
-						cell,
-						{
-							neighbours: A3(_user$project$Main$countNeighbouringMines, x, y, field)
-						});
-				}),
-			field);
-	};
-	var seed = _mgold$elm_random_pcg$Random_Pcg$initialSeed(flags);
-	var _p25 = A2(
-		_mgold$elm_random_pcg$Random_Pcg$step,
-		A2(
-			_mgold$elm_random_pcg$Random_Pcg$list,
-			_user$project$Main$fieldWidth * _user$project$Main$fieldHeight,
-			_mgold$elm_random_pcg$Random_Pcg$oneIn(_user$project$Main$chance)),
-		seed);
-	var randomBools = _p25._0;
-	var newSeed = _p25._1;
-	var field = A2(
-		_eeue56$elm_flat_matrix$Matrix$Matrix,
-		{ctor: '_Tuple2', _0: _user$project$Main$fieldWidth, _1: _user$project$Main$fieldHeight},
-		_elm_lang$core$Array$fromList(
-			A2(_elm_lang$core$List$map, _user$project$Main$initCell, randomBools)));
-	return {
-		phase: _user$project$Main$Playing,
-		field: addNeighbourCounts(field),
-		seed: newSeed,
-		shiftDown: false,
-		flagsLeft: _user$project$Main$countFlagsLeft(field),
-		previous: _elm_lang$core$Maybe$Nothing
-	};
-};
-var _user$project$Main$init = function (flags) {
-	return A2(
-		_NoRedInk$rocket_update$Rocket_ops['=>'],
-		_user$project$Main$randomModel(flags),
-		{ctor: '[]'});
-};
+var _user$project$Main$Restart = {ctor: 'Restart'};
 var _user$project$Main$DoubleClickCell = F3(
 	function (a, b, c) {
 		return {ctor: 'DoubleClickCell', _0: a, _1: b, _2: c};
@@ -17755,12 +17782,43 @@ var _user$project$Main$view = function (model) {
 				ctor: '::',
 				_0: A2(
 					_elm_lang$html$Html$h1,
-					{ctor: '[]'},
 					{
 						ctor: '::',
-						_0: _elm_lang$html$Html$text(
-							_elm_lang$core$Basics$toString(model.flagsLeft)),
+						_0: _user$project$Main$class(
+							{
+								ctor: '::',
+								_0: _user$project$Styles$Header,
+								_1: {ctor: '[]'}
+							}),
 						_1: {ctor: '[]'}
+					},
+					{
+						ctor: '::',
+						_0: A2(
+							_elm_lang$html$Html$span,
+							{ctor: '[]'},
+							{
+								ctor: '::',
+								_0: _elm_lang$html$Html$text(
+									_elm_lang$core$Basics$toString(model.flagsLeft)),
+								_1: {ctor: '[]'}
+							}),
+						_1: {
+							ctor: '::',
+							_0: A2(
+								_elm_lang$html$Html$span,
+								{
+									ctor: '::',
+									_0: _elm_lang$html$Html_Events$onClick(_user$project$Main$Restart),
+									_1: {ctor: '[]'}
+								},
+								{
+									ctor: '::',
+									_0: _elm_lang$html$Html$text('Restart'),
+									_1: {ctor: '[]'}
+								}),
+							_1: {ctor: '[]'}
+						}
 					}),
 				_1: {ctor: '[]'}
 			}
