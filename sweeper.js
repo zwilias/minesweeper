@@ -17244,14 +17244,38 @@ var _user$project$Main$countNeighbouringMines = F3(
 				_user$project$Main$isMine,
 				A3(_eeue56$elm_flat_matrix$Matrix_Extra$neighbours, x, y, field)));
 	});
+var _user$project$Main$popState = function (model) {
+	var _p2 = model.previousStates;
+	if (_p2.ctor === '[]') {
+		return model;
+	} else {
+		var _p3 = _p2._0;
+		return _elm_lang$core$Native_Utils.update(
+			model,
+			{field: _p3.field, flagsLeft: _p3.flagsLeft, phase: _p3.phase, previousStates: _p2._1});
+	}
+};
+var _user$project$Main$pushState = function (model) {
+	var prev = {phase: model.phase, flagsLeft: model.flagsLeft, field: model.field};
+	return _elm_lang$core$Native_Utils.update(
+		model,
+		{
+			previousStates: {ctor: '::', _0: prev, _1: model.previousStates}
+		});
+};
+var _user$project$Main$backspace = 8;
 var _user$project$Main$shiftKey = 16;
 var _user$project$Main$Cell = F3(
 	function (a, b, c) {
 		return {state: a, mine: b, neighbours: c};
 	});
-var _user$project$Main$Model = F5(
-	function (a, b, c, d, e) {
-		return {phase: a, field: b, seed: c, shiftDown: d, flagsLeft: e};
+var _user$project$Main$PrevState = F3(
+	function (a, b, c) {
+		return {phase: a, flagsLeft: b, field: c};
+	});
+var _user$project$Main$Model = F6(
+	function (a, b, c, d, e, f) {
+		return {phase: a, field: b, seed: c, shiftDown: d, flagsLeft: e, previousStates: f};
 	});
 var _user$project$Main$Discovered = {ctor: 'Discovered'};
 var _user$project$Main$showCell = function (cell) {
@@ -17268,21 +17292,21 @@ var _user$project$Main$isFlag = function (cell) {
 	return _elm_lang$core$Native_Utils.eq(cell.state, _user$project$Main$Flagged);
 };
 var _user$project$Main$countFlagsLeft = function (cellMatrix) {
-	var _p2 = A3(
+	var _p4 = A3(
 		_elm_lang$core$Array$foldl,
 		F2(
-			function (cell, _p3) {
-				var _p4 = _p3;
-				var _p6 = _p4._0;
-				var _p5 = _p4._1;
-				var nBombs = _user$project$Main$isMine(cell) ? (_p5 + 1) : _p5;
-				var nFlags = _user$project$Main$isFlag(cell) ? (_p6 + 1) : _p6;
+			function (cell, _p5) {
+				var _p6 = _p5;
+				var _p8 = _p6._0;
+				var _p7 = _p6._1;
+				var nBombs = _user$project$Main$isMine(cell) ? (_p7 + 1) : _p7;
+				var nFlags = _user$project$Main$isFlag(cell) ? (_p8 + 1) : _p8;
 				return {ctor: '_Tuple2', _0: nFlags, _1: nBombs};
 			}),
 		{ctor: '_Tuple2', _0: 0, _1: 0},
 		cellMatrix.data);
-	var flags = _p2._0;
-	var bombs = _p2._1;
+	var flags = _p4._0;
+	var bombs = _p4._1;
 	return bombs - flags;
 };
 var _user$project$Main$countNeighbouringFlags = F3(
@@ -17316,27 +17340,27 @@ var _user$project$Main$discover = F3(
 	function (x, y, field) {
 		var updatedField = A4(_eeue56$elm_flat_matrix$Matrix$update, x, y, _user$project$Main$showCell, field);
 		var neighbours = function (field) {
-			var _p7 = A3(_eeue56$elm_flat_matrix$Matrix$get, x, y, field);
-			if (_p7.ctor === 'Nothing') {
+			var _p9 = A3(_eeue56$elm_flat_matrix$Matrix$get, x, y, field);
+			if (_p9.ctor === 'Nothing') {
 				return {ctor: '[]'};
 			} else {
-				return (_elm_lang$core$Native_Utils.cmp(_p7._0.neighbours, 0) > 0) ? {ctor: '[]'} : A3(_eeue56$elm_flat_matrix$Matrix_Extra$indexedNeighbours, x, y, field);
+				return (_elm_lang$core$Native_Utils.cmp(_p9._0.neighbours, 0) > 0) ? {ctor: '[]'} : A3(_eeue56$elm_flat_matrix$Matrix_Extra$indexedNeighbours, x, y, field);
 			}
 		};
 		return A3(
 			_elm_lang$core$List$foldl,
 			F2(
-				function (_p8, field) {
-					var _p9 = _p8;
-					return A3(_user$project$Main$discover, _p9._0._0, _p9._0._1, field);
+				function (_p10, field) {
+					var _p11 = _p10;
+					return A3(_user$project$Main$discover, _p11._0._0, _p11._0._1, field);
 				}),
 			updatedField,
 			A2(
 				_elm_lang$core$List$filter,
-				function (_p10) {
-					var _p11 = _p10;
-					var _p12 = _p11._1;
-					return _user$project$Main$isPotential(_p12) && (!_user$project$Main$isMine(_p12));
+				function (_p12) {
+					var _p13 = _p12;
+					var _p14 = _p13._1;
+					return _user$project$Main$isPotential(_p14) && (!_user$project$Main$isMine(_p14));
 				},
 				neighbours(updatedField)));
 	});
@@ -17377,17 +17401,17 @@ var _user$project$Main$floodFromCell = F4(
 					_elm_lang$core$Tuple$first,
 					A2(
 						_elm_lang$core$List$filter,
-						function (_p13) {
-							var _p14 = _p13;
-							return _user$project$Main$isPotential(_p14._1);
+						function (_p15) {
+							var _p16 = _p15;
+							return _user$project$Main$isPotential(_p16._1);
 						},
 						A3(_eeue56$elm_flat_matrix$Matrix_Extra$indexedNeighbours, x, y, model.field)));
 				var updatedField = A3(
 					_elm_lang$core$List$foldl,
 					F2(
-						function (_p15, field) {
-							var _p16 = _p15;
-							return A3(_user$project$Main$discover, _p16._0, _p16._1, field);
+						function (_p17, field) {
+							var _p18 = _p17;
+							return A3(_user$project$Main$discover, _p18._0, _p18._1, field);
 						}),
 					model.field,
 					fieldsToDiscover);
@@ -17399,11 +17423,11 @@ var _user$project$Main$floodFromCell = F4(
 	});
 var _user$project$Main$handleClick = F3(
 	function (x, y, model) {
-		var _p17 = A3(_eeue56$elm_flat_matrix$Matrix$get, x, y, model.field);
-		if (_p17.ctor === 'Nothing') {
+		var _p19 = A3(_eeue56$elm_flat_matrix$Matrix$get, x, y, model.field);
+		if (_p19.ctor === 'Nothing') {
 			return model;
 		} else {
-			return _p17._0.mine ? _elm_lang$core$Native_Utils.update(
+			return _p19._0.mine ? _elm_lang$core$Native_Utils.update(
 				model,
 				{
 					field: _user$project$Main$revealMines(model.field),
@@ -17417,19 +17441,27 @@ var _user$project$Main$handleClick = F3(
 	});
 var _user$project$Main$update = F2(
 	function (action, model) {
-		var _p18 = action;
-		switch (_p18.ctor) {
+		var _p20 = action;
+		switch (_p20.ctor) {
 			case 'ClickCell':
-				var _p21 = _p18._1;
-				var _p20 = _p18._0;
-				var _p19 = model.phase;
-				if (_p19.ctor === 'Playing') {
+				var _p23 = _p20._1;
+				var _p22 = _p20._0;
+				var _p21 = model.phase;
+				if (_p21.ctor === 'Playing') {
 					return model.shiftDown ? A2(
 						_NoRedInk$rocket_update$Rocket_ops['=>'],
-						A3(_user$project$Main$toggleFlag, _p20, _p21, model),
+						A3(
+							_user$project$Main$toggleFlag,
+							_p22,
+							_p23,
+							_user$project$Main$pushState(model)),
 						{ctor: '[]'}) : A2(
 						_NoRedInk$rocket_update$Rocket_ops['=>'],
-						A3(_user$project$Main$handleClick, _p20, _p21, model),
+						A3(
+							_user$project$Main$handleClick,
+							_p22,
+							_p23,
+							_user$project$Main$pushState(model)),
 						{ctor: '[]'});
 				} else {
 					return A2(
@@ -17452,11 +17484,16 @@ var _user$project$Main$update = F2(
 						{shiftDown: false}),
 					{ctor: '[]'});
 			case 'DoubleClickCell':
-				var _p22 = model.phase;
-				if (_p22.ctor === 'Playing') {
+				var _p24 = model.phase;
+				if (_p24.ctor === 'Playing') {
 					return A2(
 						_NoRedInk$rocket_update$Rocket_ops['=>'],
-						A4(_user$project$Main$floodFromCell, _p18._0, _p18._1, _p18._2, model),
+						A4(
+							_user$project$Main$floodFromCell,
+							_p20._0,
+							_p20._1,
+							_p20._2,
+							_user$project$Main$pushState(model)),
 						{ctor: '[]'});
 				} else {
 					return A2(
@@ -17464,6 +17501,11 @@ var _user$project$Main$update = F2(
 						model,
 						{ctor: '[]'});
 				}
+			case 'PopState':
+				return A2(
+					_NoRedInk$rocket_update$Rocket_ops['=>'],
+					_user$project$Main$popState(model),
+					{ctor: '[]'});
 			default:
 				return A2(
 					_NoRedInk$rocket_update$Rocket_ops['=>'],
@@ -17487,15 +17529,15 @@ var _user$project$Main$randomModel = function (flags) {
 			field);
 	};
 	var seed = _mgold$elm_random_pcg$Random_Pcg$initialSeed(flags);
-	var _p23 = A2(
+	var _p25 = A2(
 		_mgold$elm_random_pcg$Random_Pcg$step,
 		A2(
 			_mgold$elm_random_pcg$Random_Pcg$list,
 			_user$project$Main$fieldWidth * _user$project$Main$fieldHeight,
 			_mgold$elm_random_pcg$Random_Pcg$oneIn(_user$project$Main$chance)),
 		seed);
-	var randomBools = _p23._0;
-	var newSeed = _p23._1;
+	var randomBools = _p25._0;
+	var newSeed = _p25._1;
 	var field = A2(
 		_eeue56$elm_flat_matrix$Matrix$Matrix,
 		{ctor: '_Tuple2', _0: _user$project$Main$fieldWidth, _1: _user$project$Main$fieldHeight},
@@ -17506,7 +17548,8 @@ var _user$project$Main$randomModel = function (flags) {
 		field: addNeighbourCounts(field),
 		seed: newSeed,
 		shiftDown: false,
-		flagsLeft: _user$project$Main$countFlagsLeft(field)
+		flagsLeft: _user$project$Main$countFlagsLeft(field),
+		previousStates: {ctor: '[]'}
 	};
 };
 var _user$project$Main$init = function (flags) {
@@ -17522,11 +17565,11 @@ var _user$project$Main$DoubleClickCell = F3(
 var _user$project$Main$renderNumbered = F3(
 	function (cell, x, y) {
 		var number = function () {
-			var _p24 = cell.neighbours;
-			if (_p24 === 0) {
+			var _p26 = cell.neighbours;
+			if (_p26 === 0) {
 				return '';
 			} else {
-				return _elm_lang$core$Basics$toString(_p24);
+				return _elm_lang$core$Basics$toString(_p26);
 			}
 		}();
 		return A2(
@@ -17558,6 +17601,7 @@ var _user$project$Main$renderNumbered = F3(
 	});
 var _user$project$Main$ReleaseShift = {ctor: 'ReleaseShift'};
 var _user$project$Main$PressShift = {ctor: 'PressShift'};
+var _user$project$Main$PopState = {ctor: 'PopState'};
 var _user$project$Main$NoOp = {ctor: 'NoOp'};
 var _user$project$Main$subscriptions = function (model) {
 	return _elm_lang$core$Platform_Sub$batch(
@@ -17565,7 +17609,7 @@ var _user$project$Main$subscriptions = function (model) {
 			ctor: '::',
 			_0: _elm_lang$keyboard$Keyboard$downs(
 				function (x) {
-					return _elm_lang$core$Native_Utils.eq(x, _user$project$Main$shiftKey) ? _user$project$Main$PressShift : _user$project$Main$NoOp;
+					return _elm_lang$core$Native_Utils.eq(x, _user$project$Main$shiftKey) ? _user$project$Main$PressShift : (_elm_lang$core$Native_Utils.eq(x, _user$project$Main$backspace) ? _user$project$Main$PopState : _user$project$Main$NoOp);
 				}),
 			_1: {
 				ctor: '::',
@@ -17637,10 +17681,10 @@ var _user$project$Main$renderPotential = F2(
 	});
 var _user$project$Main$renderCell = F3(
 	function (y, x, cell) {
-		var _p25 = {ctor: '_Tuple2', _0: cell.state, _1: cell.mine};
-		switch (_p25._0.ctor) {
+		var _p27 = {ctor: '_Tuple2', _0: cell.state, _1: cell.mine};
+		switch (_p27._0.ctor) {
 			case 'Discovered':
-				if (_p25._1 === true) {
+				if (_p27._1 === true) {
 					return _user$project$Main$renderMine;
 				} else {
 					return A3(_user$project$Main$renderNumbered, cell, x, y);
@@ -17724,13 +17768,13 @@ var _user$project$Main$view = function (model) {
 };
 var _user$project$Main$main = _elm_lang$html$Html$programWithFlags(
 	{
-		init: function (_p26) {
+		init: function (_p28) {
 			return _NoRedInk$rocket_update$Rocket$batchInit(
-				_user$project$Main$init(_p26));
+				_user$project$Main$init(_p28));
 		},
-		update: function (_p27) {
+		update: function (_p29) {
 			return _NoRedInk$rocket_update$Rocket$batchUpdate(
-				_user$project$Main$update(_p27));
+				_user$project$Main$update(_p29));
 		},
 		subscriptions: _user$project$Main$subscriptions,
 		view: _user$project$Main$view
