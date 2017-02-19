@@ -35,6 +35,11 @@ shiftKey =
     16
 
 
+backspace : Keyboard.KeyCode
+backspace =
+    8
+
+
 subscriptions : Model -> Sub Msg
 subscriptions model =
     Sub.batch
@@ -42,6 +47,8 @@ subscriptions model =
             (\x ->
                 if x == shiftKey then
                     PressShift
+                else if x == backspace then
+                    PopState
                 else
                     NoOp
             )
@@ -85,13 +92,47 @@ type GamePhase
     | GameOver
 
 
+type alias PrevState =
+    { phase : GamePhase, flagsLeft : Int, field : Matrix Cell }
+
+
 type alias Model =
     { phase : GamePhase
     , field : Matrix Cell
     , seed : Random.Seed
     , shiftDown : Bool
     , flagsLeft : Int
+    , previousStates : List PrevState
     }
+
+
+pushState : Model -> Model
+pushState model =
+    let
+        prev =
+            { phase = model.phase
+            , flagsLeft = model.flagsLeft
+            , field = model.field
+            }
+    in
+        { model
+            | previousStates = prev :: model.previousStates
+        }
+
+
+popState : Model -> Model
+popState model =
+    case model.previousStates of
+        [] ->
+            model
+
+        head :: tail ->
+            { model
+                | field = head.field
+                , flagsLeft = head.flagsLeft
+                , phase = head.phase
+                , previousStates = tail
+            }
 
 
 countNeighbouringMines : Int -> Int -> Matrix Cell -> Int
@@ -137,6 +178,7 @@ randomModel flags =
         , seed = newSeed
         , shiftDown = False
         , flagsLeft = field |> countFlagsLeft
+        , previousStates = []
         }
 
 
@@ -183,6 +225,7 @@ countFlagsLeft cellMatrix =
 type Msg
     = ClickCell Int Int
     | NoOp
+    | PopState
     | PressShift
     | ReleaseShift
     | DoubleClickCell Int Int Cell
@@ -195,10 +238,14 @@ update action model =
             case model.phase of
                 Playing ->
                     if model.shiftDown then
-                        toggleFlag x y model
+                        model
+                            |> pushState
+                            |> toggleFlag x y
                             => []
                     else
-                        handleClick x y model
+                        model
+                            |> pushState
+                            |> handleClick x y
                             => []
 
                 _ ->
@@ -221,11 +268,17 @@ update action model =
                 Playing ->
                     -- handle that
                     model
+                        |> pushState
                         |> floodFromCell x y cell
                         => []
 
                 _ ->
                     model => []
+
+        PopState ->
+            model
+                |> popState
+                => []
 
         NoOp ->
             model => []
