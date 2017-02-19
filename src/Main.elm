@@ -1,6 +1,6 @@
 module Main exposing (..)
 
-import Html exposing (programWithFlags, Html, div, text, h1)
+import Html exposing (programWithFlags, Html, div, text, h1, span)
 import Html.Lazy
 import Html.Events exposing (onClick, onDoubleClick)
 import Html.CssHelpers
@@ -143,16 +143,12 @@ countNeighbouringMines x y field =
 
 
 ( fieldWidth, fieldHeight, chance ) =
-    ( 60, 40, 9 )
+    ( 60, 38, 9 )
 
 
-randomModel : Int -> Model
-randomModel flags =
+randomModel : Random.Seed -> Model
+randomModel seed =
     let
-        seed : Random.Seed
-        seed =
-            Random.initialSeed flags
-
         ( randomBools, newSeed ) =
             Random.step (Random.list (fieldWidth * fieldHeight) <| Random.oneIn chance) seed
 
@@ -188,7 +184,7 @@ type alias Flags =
 
 init : Flags -> ( Model, List (Cmd Msg) )
 init flags =
-    randomModel flags => []
+    randomModel (Random.initialSeed flags) => []
 
 
 countFlagsLeft : Matrix Cell -> Int
@@ -229,6 +225,7 @@ type Msg
     | PressShift
     | ReleaseShift
     | DoubleClickCell Int Int Cell
+    | Restart
 
 
 update : Msg -> Model -> ( Model, List (Cmd Msg) )
@@ -282,6 +279,10 @@ update action model =
 
         NoOp ->
             model => []
+
+        Restart ->
+            randomModel model.seed
+                => []
 
 
 countNeighbouringFlags : Int -> Int -> Matrix Cell -> Int
@@ -455,7 +456,10 @@ view : Model -> Html Msg
 view model =
     div [ class [ Styles.Wrapper ] ]
         [ renderField model.field
-        , h1 [] [ text <| toString model.flagsLeft ]
+        , h1 [ class [ Styles.Header ] ]
+            [ span [] [ text <| toString model.flagsLeft ]
+            , span [ onClick Restart ] [ text "Restart" ]
+            ]
         ]
 
 

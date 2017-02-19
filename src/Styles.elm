@@ -20,6 +20,7 @@ type CssClass
     | Potential
     | Flagged
     | Wrapper
+    | Header
 
 
 
@@ -31,7 +32,12 @@ type CssClass
 css : Stylesheet
 css =
     (stylesheet << namespace "sweeper")
-        [ class Wrapper
+        [ class Header
+            [ displayFlex
+            , width (px 300)
+            , justifyContent spaceBetween
+            ]
+        , class Wrapper
             [ displayFlex
             , flexDirection column
             , alignItems center
