@@ -102,7 +102,7 @@ type alias Model =
     , seed : Random.Seed
     , shiftDown : Bool
     , flagsLeft : Int
-    , previousStates : List PrevState
+    , previous : Maybe PrevState
     }
 
 
@@ -116,22 +116,22 @@ pushState model =
             }
     in
         { model
-            | previousStates = prev :: model.previousStates
+            | previous = Just prev
         }
 
 
 popState : Model -> Model
 popState model =
-    case model.previousStates of
-        [] ->
+    case model.previous of
+        Nothing ->
             model
 
-        head :: tail ->
+        Just prev ->
             { model
-                | field = head.field
-                , flagsLeft = head.flagsLeft
-                , phase = head.phase
-                , previousStates = tail
+                | field = prev.field
+                , flagsLeft = prev.flagsLeft
+                , phase = prev.phase
+                , previous = Nothing
             }
 
 
@@ -178,7 +178,7 @@ randomModel flags =
         , seed = newSeed
         , shiftDown = False
         , flagsLeft = field |> countFlagsLeft
-        , previousStates = []
+        , previous = Nothing
         }
 
 
